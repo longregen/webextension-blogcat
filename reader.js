@@ -49,22 +49,27 @@ const FeedItem = {
     if (link.startsWith("https://www.youtube.com/watch?")) {
       let params = new URL(item.link).searchParams;
       let id = params.get("v");
-      switch (settings["openYoutubeIn"]) {
-        case "embed":
-          link = `/youtube.html?id=${id}`;
-          break;
-        case "custom":
-          let template = settings["youtubeCustomURL"];
-          if (template.length == 0) {
-            link = `/youtube.html?id=${id}`;
-          } else {
-            link = template.toLowerCase().replace("%id%", id);
-          }
-          break;
-        case "youtube":
-        default:
-          link = item.link;
-          break;
+      // Validate YouTube video ID (alphanumeric chars, hyphens, or underscores, typically 8-16 chars)
+      const youtubeIdPattern = /^[a-zA-Z0-9_-]{8,16}$/;
+      if (id && youtubeIdPattern.test(id)) {
+        switch (settings["openYoutubeIn"]) {
+          case "embed":
+            link = `/youtube.html?id=${encodeURIComponent(id)}`;
+            break;
+          case "custom":
+            let template = settings["youtubeCustomURL"];
+            if (template.length == 0) {
+              link = `/youtube.html?id=${encodeURIComponent(id)}`;
+            } else {
+              // Only allow safe URL construction - encode the ID
+              link = template.toLowerCase().replace("%id%", encodeURIComponent(id));
+            }
+            break;
+          case "youtube":
+          default:
+            link = item.link;
+            break;
+        }
       }
     }
 
@@ -400,7 +405,7 @@ const Reader = {
         <li><a href="/docs/index.html#/opml">Learn how to import an OPML from another reader.</a></li>
       </ul>
       `;
-      return [m(Menu), m("p", m.trust(chunk))];
+      return [m(Menu), m("p", m.trust(xssFilters.inHTMLData(chunk)))];
     }
   },
 };

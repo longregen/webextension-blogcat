@@ -5,6 +5,7 @@ import {
 } from "./common/dataStorage.js";
 import { mastodon } from "./common/mastodon.js";
 import { bluesky } from "./common/bluesky.js";
+import { safeFetch } from "./common/urlValidator.js";
 
 /*
 == Bluesky ===========================================================================================================
@@ -35,6 +36,7 @@ const AddBluesky = {
       handle: "",
       password: "",
     };
+    vnode.state.showPassword = false;
   },
   view: (vnode) => {
     let account = vnode.state.account;
@@ -49,13 +51,21 @@ const AddBluesky = {
         },
       }),
       m("label", { for: "password" }, "Application Password"),
-      m("input[type=text]", {
-        name: "password",
-        value: account["password"],
-        oninput: (e) => {
-          account["password"] = e.target.value;
-        },
-      }),
+      m("div", { style: "display: flex; gap: 0.5rem;" }, [
+        m("input", {
+          type: vnode.state.showPassword ? "text" : "password",
+          name: "password",
+          value: account["password"],
+          style: "flex: 1;",
+          oninput: (e) => {
+            account["password"] = e.target.value;
+          },
+        }),
+        m("button", {
+          type: "button",
+          onclick: () => { vnode.state.showPassword = !vnode.state.showPassword; }
+        }, vnode.state.showPassword ? "Hide" : "Show"),
+      ]),
       m("button", { onclick: (ev) => saveBlueskyAccount(ev, account) }, "Save"),
     ]);
   },
@@ -114,6 +124,7 @@ const AddMastodon = {
       server: "",
       access_token: "",
     };
+    vnode.state.showToken = false;
   },
   view: (vnode) => {
     let account = vnode.state.account;
@@ -136,13 +147,21 @@ const AddMastodon = {
         },
       }),
       m("label", { for: "access_token" }, "Personal Access Token"),
-      m("input[type=text]", {
-        name: "access_token",
-        value: account["access_token"],
-        oninput: (e) => {
-          account["access_token"] = e.target.value;
-        },
-      }),
+      m("div", { style: "display: flex; gap: 0.5rem;" }, [
+        m("input", {
+          type: vnode.state.showToken ? "text" : "password",
+          name: "access_token",
+          value: account["access_token"],
+          style: "flex: 1;",
+          oninput: (e) => {
+            account["access_token"] = e.target.value;
+          },
+        }),
+        m("button", {
+          type: "button",
+          onclick: () => { vnode.state.showToken = !vnode.state.showToken; }
+        }, vnode.state.showToken ? "Hide" : "Show"),
+      ]),
       m(
         "button",
         { onclick: (ev) => saveMastodonAccount(ev, account) },
@@ -160,7 +179,7 @@ async function saveMicropubAccount(ev, account) {
 
   let url = new URL(account.link);
 
-  let response = await fetch(url);
+  let response = await safeFetch(url);
 
   if (!response.ok) {
     throw "Error adding Micropub account";
@@ -193,6 +212,7 @@ const AddMicropub = {
       link: "",
       access_token: "",
     };
+    vnode.state.showToken = false;
   },
   view: (vnode) => {
     let account = vnode.state.account;
@@ -207,13 +227,21 @@ const AddMicropub = {
         },
       }),
       m("label", { for: "access_token" }, "Access Token"),
-      m("input[type=text]", {
-        name: "access_token",
-        value: account["access_token"],
-        oninput: (e) => {
-          account["access_token"] = e.target.value;
-        },
-      }),
+      m("div", { style: "display: flex; gap: 0.5rem;" }, [
+        m("input", {
+          type: vnode.state.showToken ? "text" : "password",
+          name: "access_token",
+          value: account["access_token"],
+          style: "flex: 1;",
+          oninput: (e) => {
+            account["access_token"] = e.target.value;
+          },
+        }),
+        m("button", {
+          type: "button",
+          onclick: () => { vnode.state.showToken = !vnode.state.showToken; }
+        }, vnode.state.showToken ? "Hide" : "Show"),
+      ]),
       m(
         "button",
         { onclick: (ev) => saveMicropubAccount(ev, account) },

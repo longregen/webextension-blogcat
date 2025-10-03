@@ -57,5 +57,8 @@
   ],
   "host_permissions": [
     "<all_urls>"
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src https:; frame-src https://www.youtube.com; object-src 'none';"
+  }
 }

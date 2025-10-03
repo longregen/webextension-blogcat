@@ -177,7 +177,7 @@ const PodcastMeta = {
           { href: meta.image.link, target: "_blank" },
           m("img.podcast-banner", { src: meta.image.url }),
         ),
-        m("div.description", m.trust(meta.description)),
+        m("div.description", m.trust(xssFilters.inHTMLData(meta.description))),
       ]),
       m(SeasonPills),
       m(EpisodePills),
@@ -256,7 +256,7 @@ const ItemMeta = {
             "Autoplay next episode",
           ]),
         ),
-        m("div.description", m.trust(item.content)),
+        m("div.description", m.trust(xssFilters.inHTMLData(item.content))),
       ]),
     ];
   },

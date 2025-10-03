@@ -24,8 +24,14 @@ function displayBrokenFeedMessage(feed_url) {
   let url = `https://validator.w3.org/feed/check.cgi?url=${
     encodeURIComponent(feed_url)
   }`;
-  feedValidationSpan.innerHTML =
-    `Error: this feed can't be loaded. <a href="${url}" target="_blank">Click to check it on a validator</a>.`;
+  // Create safe link element to prevent XSS
+  feedValidationSpan.textContent = "Error: this feed can't be loaded. ";
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.textContent = "Click to check it on a validator";
+  feedValidationSpan.appendChild(link);
+  feedValidationSpan.appendChild(document.createTextNode("."));
   addFeedButton.disabled = true;
 }
 

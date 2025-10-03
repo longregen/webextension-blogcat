@@ -1,8 +1,10 @@
+import { safeFetch } from "./urlValidator.js";
+
 export const opml = {
   loadFromURL: async (u) => {
     let feeds = [];
 
-    const response = await fetch(u);
+    const response = await safeFetch(u);
     const text = await response.text();
 
     const parser = new DOMParser();

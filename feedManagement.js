@@ -236,7 +236,7 @@ const EmptyList = {
         <li><a href="/docs/index.html#/opml">Learn how to import an OPML from another reader.</a></li>
       </ul>
       `;
-    return m("p", m.trust(chunk));
+    return m("p", m.trust(xssFilters.inHTMLData(chunk)));
   },
 };
 

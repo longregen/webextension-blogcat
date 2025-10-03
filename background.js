@@ -4,6 +4,7 @@ import {
   saveFeed,
   updateLinkGraph,
 } from "./common/dataStorage.js";
+import { safeFetch } from "./common/urlValidator.js";
 
 /**
  * Page Action
@@ -84,7 +85,7 @@ function handleMessage(request, sender, sendResponse) {
         const tabId = tab.id;
         // damn youtube complicating things.
         if (tab.url.startsWith("https://www.youtube.com/")) {
-          const res = await fetch(tab.url);
+          const res = await safeFetch(tab.url);
           const text = await res.text();
           const parser = new DOMParser();
           const doc = parser.parseFromString(text, "text/html");
@@ -271,7 +272,7 @@ function onVisited(historyItem) {
       const tabId = tab.id;
       // damn youtube complicating things.
       if (tab.url.startsWith("https://www.youtube.com/")) {
-        const res = await fetch(tab.url);
+        const res = await safeFetch(tab.url);
         const text = await res.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
